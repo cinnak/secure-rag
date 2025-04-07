@@ -17,8 +17,14 @@ from .retriever import PermissionRetriever
 # 在此脚本的顶层也加载 .env 文件，以确保环境变量可用
 # (如果 PermissionRetriever 内部也加载，重复加载通常无害)
 from dotenv import load_dotenv
+import logging
+
+# 配置日志记录
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 load_dotenv()
-print("Attempted to load .env file from rag_chain.py")
+logger.info("Attempted to load .env file from rag_chain.py")
 
 
 # --- 配置 ---
@@ -41,11 +47,11 @@ try:
     # 传递相对于此脚本位置的路径
     retriever = PermissionRetriever(vectorstore_path=VECTORSTORE_PATH, embedding_model_name=GOOGLE_EMBEDDING_MODEL)
 except FileNotFoundError as e:
-    print(f"初始化检索器时出错: {e}")
-    print("请确保向量存储在指定路径存在。")
+    logger.info(f"初始化检索器时出错: {e}")
+    logger.info("请确保向量存储在指定路径存在。")
     retriever = None
 except Exception as e:
-    print(f"检索器初始化期间发生意外错误: {e}")
+    logger.info(f"检索器初始化期间发生意外错误: {e}")
     retriever = None
 
 # 2. 初始化聊天模型
@@ -54,8 +60,8 @@ try:
     # temperature=0 使回答更具确定性
     # convert_system_message_to_human=True 可能对某些 Gemini 提示结构有帮助
 except Exception as e:
-    print(f"初始化 Google Chat 模型时出错 (使用 {GOOGLE_CHAT_MODEL}): {e}")
-    print("请确保 GOOGLE_API_KEY 有效且模型名称正确。")
+    logger.info(f"初始化 Google Chat 模型时出错 (使用 {GOOGLE_CHAT_MODEL}): {e}")
+    logger.info("请确保 GOOGLE_API_KEY 有效且模型名称正确。")
     llm = None
 
 # 3. 定义提示模板
@@ -101,9 +107,9 @@ if retriever and llm:
         }
     ).assign(answer=rag_chain_from_docs) # 将检索到的文档和问题传递给最终步骤
 
-    print("RAG chain created successfully.")
+    logger.info("RAG chain created successfully.")
 else:
-    print("由于初始化错误，无法创建 RAG 链。")
+    logger.info("由于初始化错误，无法创建 RAG 链。")
 
 
 # --- 获取响应的函数 ---

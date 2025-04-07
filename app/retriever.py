@@ -8,6 +8,12 @@ from langchain.docstore.document import Document # 用于类型提示
 # 加载 .env 文件中的环境变量 (例如 GOOGLE_API_KEY)
 # 确保 .env 文件在项目根目录中
 from dotenv import load_dotenv
+import logging
+
+# 配置日志记录
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 load_dotenv()
 
 # --- 配置 ---
@@ -35,8 +41,7 @@ class PermissionRetriever:
             vectorstore_path = os.path.join(current_dir, vectorstore_path)
             vectorstore_path = os.path.normpath(vectorstore_path) # 规范化路径 (处理 ../)
 
-
-        print(f"Attempting to load vector store from: {vectorstore_path}") # 调试信息
+        logger.info(f"Attempting to load vector store from: {vectorstore_path}") # 调试信息
 
         if not os.path.exists(vectorstore_path) or not os.path.isdir(vectorstore_path):
             raise FileNotFoundError(f"在 {vectorstore_path} 找不到向量存储目录。请确保路径正确并且已运行 indexing.py。")
@@ -46,7 +51,7 @@ class PermissionRetriever:
             # GOOGLE_API_KEY 应已通过 load_dotenv() 从 .env 文件加载
             embeddings = GoogleGenerativeAIEmbeddings(model=embedding_model_name)
         except Exception as e:
-            print(f"初始化 Google Embeddings 时出错。请确保 GOOGLE_API_KEY 在 .env 文件中设置正确。错误: {e}")
+            logger.info(f"初始化 Google Embeddings 时出错。请确保 GOOGLE_API_KEY 在 .env 文件中设置正确。错误: {e}")
             raise # 重新引发异常以停止初始化
 
         try:
@@ -56,9 +61,9 @@ class PermissionRetriever:
                 embeddings,
                 allow_dangerous_deserialization=True # 为兼容性添加
             )
-            print(f"成功从 {vectorstore_path} 加载向量存储")
+            logger.info(f"成功从 {vectorstore_path} 加载向量存储")
         except Exception as e:
-            print(f"从 {vectorstore_path} 加载向量存储时出错: {e}")
+            logger.info(f"从 {vectorstore_path} 加载向量存储时出错: {e}")
             raise # 重新引发
 
     def get_relevant_documents(self, query: str, user_role: str, k: int = 4) -> list[Document]:
@@ -74,18 +79,18 @@ class PermissionRetriever:
             一个与用户相关且用户可访问的 LangChain Document 对象列表。
         """
         if not self.vectorstore:
-            print("错误: 向量存储未加载。")
+            logger.info("错误: 向量存储未加载。")
             return []
 
-        print(f"\n--- 正在为角色检索: {user_role} ---")
-        print(f"查询: {query}")
+        logger.info(f"\n--- 正在为角色检索: {user_role} ---")
+        logger.info(f"查询: {query}")
 
         # 1. 执行相似性搜索
         try:
             potential_matches = self.vectorstore.similarity_search(query, k=k)
-            print(f"找到 {len(potential_matches)} 个潜在匹配项 (过滤前)。")
+            logger.info(f"找到 {len(potential_matches)} 个潜在匹配项 (过滤前)。")
         except Exception as e:
-            print(f"相似性搜索期间出错: {e}")
+            logger.info(f"相似性搜索期间出错: {e}")
             return []
 
         # 2. 根据 user_role 和文档元数据过滤结果
@@ -96,8 +101,8 @@ class PermissionRetriever:
                 if user_role in allowed_roles:
                     filtered_docs.append(doc)
             else:
-                print(f"警告: 文档 '{doc.metadata.get('title', 'N/A')}' 缺少 'permission' 元数据。拒绝访问。")
+                logger.info(f"警告: 文档 '{doc.metadata.get('title', 'N/A')}' 缺少 'permission' 元数据。拒绝访问。")
                 pass
 
-        print(f"权限过滤后返回 {len(filtered_docs)} 个文档。")
+        logger.info(f"权限过滤后返回 {len(filtered_docs)} 个文档。")
         return filtered_docs

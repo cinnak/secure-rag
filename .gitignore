@@ -172,3 +172,16 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Ignore environment variables file
+.env
+
+# Ignore Python virtual environment
+.venv/
+
+# Ignore pycache files
+__pycache__/
+*.pyc
+
+# Ignore FAISS vectorstore index files (optional but good practice)
+vectorstore/

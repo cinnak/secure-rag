@@ -1,0 +1,63 @@
+[
+    {
+      "title": "2024 Employee Handbook",
+      "content": "This document outlines working hours, leave policies, and code of conduct for all employees at AI Tech Solutions.",
+      "category": "HR Policy",
+      "permission": ["HR"]
+    },
+    {
+      "title": "Compensation and Bonus Structure",
+      "content": "Details about salary bands, performance bonuses, and evaluation periods.",
+      "category": "HR Policy",
+      "permission": ["HR"]
+    },
+    {
+      "title": "LangChain Deployment Guide",
+      "content": "Step-by-step instructions to deploy a LangChain-powered service using Docker and Kubernetes.",
+      "category": "Technical Documentation",
+      "permission": ["Engineer", "PM"]
+    },
+    {
+      "title": "Internal API Standards",
+      "content": "Naming conventions, versioning strategy, and rate limiting guidelines for internal API endpoints.",
+      "category": "Technical Documentation",
+      "permission": ["Engineer"]
+    },
+    {
+      "title": "Product Roadmap Q2–Q4",
+      "content": "High-level plans for features like RAG integration, permission control UI, and localization support.",
+      "category": "Product",
+      "permission": ["PM"]
+    },
+    {
+      "title": "RAG vs Fine-Tuning: Architecture Comparison",
+      "content": "A strategic analysis comparing retrieval-augmented generation to full-model fine-tuning across cost and scalability.",
+      "category": "Architecture Decision",
+      "permission": ["Engineer", "PM"]
+    },
+    {
+      "title": "HR Reporting Template",
+      "content": "Standardized Excel template for quarterly HR data submissions including headcount and attrition.",
+      "category": "Operational",
+      "permission": ["HR"]
+    },
+    {
+      "title": "Monthly Product Meeting Notes - March",
+      "content": "Discussion highlights: Chat-based UI feedback, LLM inference speed, and tiered feature access.",
+      "category": "Meeting Notes",
+      "permission": ["PM", "Engineer"]
+    },
+    {
+      "title": "LLM Output Sensitivity Audit Guidelines",
+      "content": "Instructions to evaluate model output against privacy and ethical compliance constraints.",
+      "category": "Governance",
+      "permission": ["PM", "HR"]
+    },
+    {
+      "title": "Remote Work Policy 2024",
+      "content": "Regulations for remote/hybrid working models, including equipment support and time-tracking rules.",
+      "category": "HR Policy",
+      "permission": ["HR", "Engineer", "PM"]
+    }
+  ]
+  
